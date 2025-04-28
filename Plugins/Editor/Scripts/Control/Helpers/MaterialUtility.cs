@@ -272,9 +272,9 @@ namespace RealtimeCSG
             return Resources.Load<Material>( string.Format( "RealtimeCSG/Materials/{0}", materialName ) );
         }
 
-        internal static PhysicMaterial GetRuntimePhysicMaterial(string materialName)
+        internal static PhysicsMaterial GetRuntimePhysicMaterial(string materialName)
         {
-            return Resources.Load<PhysicMaterial>( string.Format( "RealtimeCSG/Materials/{0}", materialName ) );
+            return Resources.Load<PhysicsMaterial>( string.Format( "RealtimeCSG/Materials/{0}", materialName ) );
         }
 
         private static Material _defaultMaterial;
@@ -302,8 +302,8 @@ namespace RealtimeCSG
 			}
 		}
 
-        private static PhysicMaterial _defaultPhysicsMaterial;
-        public static PhysicMaterial DefaultPhysicsMaterial
+        private static PhysicsMaterial _defaultPhysicsMaterial;
+        public static PhysicsMaterial DefaultPhysicsMaterial
         {
             get
             {
