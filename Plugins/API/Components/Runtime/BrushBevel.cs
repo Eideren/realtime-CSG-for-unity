@@ -152,7 +152,8 @@ namespace Rogue.LevelDesign
 	        Brush.Shape = Shape.Clone();
 	        Brush.ControlMesh.SetDirty();
 	        ControlMeshUtility.RebuildShape(Brush);
-	        InternalCSGModelManager.CheckSurfaceModifications(Brush, true);
+	        if (Brush.ChildData?.Model != null)
+				InternalCSGModelManager.CheckSurfaceModifications(Brush, true);
 	        InternalCSGModelManager.CheckForChanges(true);
         }
 
