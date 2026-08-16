@@ -195,7 +195,6 @@ namespace InternalRealtimeCSG
 		internal void Awake()
 		{
 			// cannot change visibility since this might have an effect on exporter
-			this.gameObject.hideFlags = HideFlags.DontSaveInBuild;
 			this.hideFlags = HideFlags.DontSaveInBuild;
 
 

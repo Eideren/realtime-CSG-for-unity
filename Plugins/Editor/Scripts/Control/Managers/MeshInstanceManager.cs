@@ -24,7 +24,6 @@ namespace InternalRealtimeCSG
 													//| HideFlags.NotEditable       // when this is put into a prefab (when making a prefab containing a model for instance) this will make it impossible to delete 
 													//| HideFlags.HideInInspector   // apparently, when set, can cause issues with selection in sceneview 
 													| HideFlags.HideInHierarchy
-													| HideFlags.DontSaveInBuild
 			;
 #endif
 
@@ -1159,7 +1158,7 @@ namespace InternalRealtimeCSG
 			var transformFlags      = HideFlags.None;
 			var gameObjectFlags     = HideFlags.None;
 #else
-			var meshInstanceFlags   = HideFlags.DontSaveInBuild;// | HideFlags.NotEditable;
+			var meshInstanceFlags   = HideFlags.None;// | HideFlags.NotEditable;
 			var transformFlags      = HideFlags.HideInInspector;// | HideFlags.NotEditable;
 			var gameObjectFlags     = HideFlags.None;
 #endif
