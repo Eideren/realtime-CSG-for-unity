@@ -11,11 +11,13 @@ namespace Rogue.LevelDesign
 	[ExecuteInEditMode]
     public class BrushBevel : MonoBehaviour
     {
-	    private static int bevelRange = 1;
+	    private static readonly float mult = 0.5f;
+	    private static readonly (string name, float value)[] defaults = { ("0", 0.005f), ("1", 0.01f), ("2", 0.02f), ("3", 0.05f), ("4", 0.1f), ("5", 0.2f), ("6", 1.0f) };
+	    
 	    private static HashSet<BrushBevel> instances = new();
 	    [ReadOnly] public bool Active = false;
 	    
-	    public float Distance = 0.1f;
+	    public float Distance = defaults[0].value * mult;
 	    [Range(0, 5)] public int Iterations = 1;
 	    public bool Smooth = false;
 
@@ -66,24 +68,29 @@ namespace Rogue.LevelDesign
 		        if (shouldBeActive && go.GetComponent<BrushBevel>() is {} bb)
 		        {
 			        Handles.BeginGUI();
-			        EditorGUI.BeginChangeCheck();
 			        GUILayout.BeginArea(new Rect(0, 256, 256, EditorGUIUtility.singleLineHeight*4));
+			        GUILayout.BeginVertical(EditorStyles.helpBox);
 			        var prevLabelWidth = EditorGUIUtility.labelWidth;
 			        EditorGUIUtility.labelWidth = 100;
 
+			        EditorGUI.BeginChangeCheck();
 			        GUILayout.BeginHorizontal();
 			        {
-				        bb.Distance = EditorGUILayout.Slider("Bevel", bb.Distance, 0f, bevelRange / 4f);
-				        if (GUILayout.Button(new GUIContent("+"), EditorStyles.miniButtonLeft))
-					        bevelRange++;
-				        if (GUILayout.Button(new GUIContent("-"), EditorStyles.miniButtonLeft))
-					        bevelRange--;
+				        foreach (var (name, @default) in defaults)
+				        {
+					        if (GUILayout.Button(name, EditorStyles.miniButtonLeft))
+					        {
+						        bb.Distance = @default * mult;
+						        GUI.changed = true;
+					        }
+				        }
 				        if (GUILayout.Button(new GUIContent("x"), EditorStyles.miniButtonLeft))
 					        foreach (var o in Selection.objects)
 						        if (o is GameObject go3 && go3.GetComponent<CSGBrush>() && go3.GetComponent<BrushBevel>() is {} b)
 							        DestroyImmediate(b);
 			        }
 			        GUILayout.EndHorizontal();
+
 			        bb.Iterations = EditorGUILayout.IntSlider("Iterations", bb.Iterations, 0, 5);
 			        bb.Smooth = EditorGUILayout.Toggle("Smooth", bb.Smooth);
 
@@ -102,6 +109,7 @@ namespace Rogue.LevelDesign
 			        }
 
 			        EditorGUIUtility.labelWidth = prevLabelWidth;
+			        GUILayout.EndVertical();
 			        GUILayout.EndArea();
 			        Handles.EndGUI();
 		        }
@@ -125,6 +133,20 @@ namespace Rogue.LevelDesign
 			        Handles.EndGUI();
 		        }
 	        }
+        }
+
+        private static float Slider(string? s, float f, float min, float max)
+        {
+	        var rect = EditorGUILayout.GetControlRect(hasLabel:s is not null);
+	        float labelWidth = 0;
+	        if (s is not null)
+	        {
+		        EditorGUI.PrefixLabel(rect, new GUIContent(s));
+		        labelWidth = EditorGUIUtility.labelWidth;
+	        }
+
+	        var sliderRect = new Rect(rect.x + labelWidth, rect.y, rect.width - labelWidth, rect.height);
+	        return GUI.HorizontalSlider(sliderRect, f, min, max);
         }
 
         private void StoreAndBevel()
